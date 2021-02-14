@@ -16,31 +16,27 @@ router.post(
   ],
   validateRequest,
   async (req: Request, res: Response) => {
-    try {
-      const { email, password } = req.body;
-      const existingUser = await User.findOne({ email });
+    const { email, password } = req.body;
+    const existingUser = await User.findOne({ email });
 
-      if (!existingUser) {
-        throw new BadRequestError("Invalid credentials");
-      }
-      const isMatch = await Password.compare(existingUser.password, password);
-      if (!isMatch) {
-        throw new BadRequestError("Invalid credentials");
-      }
-      // Generate jsonwebtoken, store it on session object
-      const userJwt = jwt.sign(
-        { id: existingUser.id, email: existingUser.email },
-        process.env.JWT_KEY!
-      );
-
-      req.session = {
-        jwt: userJwt,
-      };
-
-      res.status(200).json(existingUser);
-    } catch (error) {
-      throw error;
+    if (!existingUser) {
+      throw new BadRequestError("Invalid credentials");
     }
+    const isMatch = await Password.compare(existingUser.password, password);
+    if (!isMatch) {
+      throw new BadRequestError("Invalid credentials");
+    }
+    // Generate jsonwebtoken, store it on session object
+    const userJwt = jwt.sign(
+      { id: existingUser.id, email: existingUser.email },
+      process.env.JWT_KEY!
+    );
+
+    req.session = {
+      jwt: userJwt,
+    };
+
+    res.status(200).json(existingUser);
   }
 );
 
