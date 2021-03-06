@@ -2,9 +2,8 @@ import express, { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 
 import { body } from "express-validator";
-import { BadRequestError } from "../errors/bad-request-error";
+import { BadRequestError, validateRequest } from "@skgittix/common";
 import { User } from "../models/User";
-import { validateRequest } from "../middlewares/validate-request";
 
 const router = express.Router();
 
