@@ -4,6 +4,7 @@ import { json } from "body-parser";
 import cookieSession from "cookie-session";
 
 import { errorHandler, NotFoundError } from "@skgittix/common";
+import { createTicketRouter } from './routes/new'
 
 const app = express();
 app.set("trust proxy", true);
@@ -15,6 +16,8 @@ app.use(
     signed: false,
   })
 );
+
+app.use(createTicketRouter)
 
 
 app.all("*", async () => {
