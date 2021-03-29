@@ -66,3 +66,5 @@ it("reserves a ticket", async () => {
     .expect(201);
   expect(response.body).toHaveProperty("id");
 });
+
+it.todo("emits an order created event");
