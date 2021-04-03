@@ -1,4 +1,5 @@
 import request from "supertest";
+import mongoose from "mongoose";
 import { app } from "../../app";
 import { Ticket } from "../../models/Tickets";
 
@@ -7,7 +8,11 @@ it("throws an 401 if user is not logged in", async () => {
 });
 
 const buildTicket = async () => {
-  const ticket = Ticket.build({ title: "Concert", price: 20 });
+  const ticket = Ticket.build({
+    title: "Concert",
+    price: 20,
+    id: new mongoose.Types.ObjectId().toHexString(),
+  });
   ticket.save();
   return ticket;
 };
