@@ -43,7 +43,7 @@ it("sets the order status to cancelled", async () => {
 
 it("acks the message", async () => {
   const { data, order, listener, msg } = await setup();
-  // await listener.onMessage(data, msg);
+  await listener.onMessage(data, msg);
 
   expect(msg.ack).toHaveBeenCalled();
 });
