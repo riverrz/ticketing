@@ -38,7 +38,7 @@ router.post(
       description: `Payment of Rs. ${order.price} for your oderId #${order.id}`,
     });
 
-    res.send({ success: true });
+    res.status(201).send({ success: true });
   }
 );
 

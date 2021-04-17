@@ -3,6 +3,9 @@ import mongoose from "mongoose";
 import request from "supertest";
 import { app } from "../../app";
 import { Order } from "../../models/Order";
+import { stripe } from "../../stripe";
+
+jest.mock("../../stripe");
 
 it("throws an error if unauthenticated", async () => {
   await request(app).post("/api/payments").send({}).expect(401);
@@ -72,4 +75,28 @@ it("returns a 400 when purchasing a cancelled order", async () => {
     .set("Cookie", cookie)
     .send({ token: "sadasd", orderId: order.id })
     .expect(400);
+});
+
+it("returns a 201 with valid inputs", async () => {
+  const userId = mongoose.Types.ObjectId().toHexString();
+
+  const order = Order.build({
+    id: mongoose.Types.ObjectId().toHexString(),
+    version: 0,
+    userId,
+    status: OrderStatus.Created,
+    price: 20,
+  });
+  await order.save();
+
+  await request(app)
+    .post("/api/payments")
+    .set("Cookie", global.signin(userId))
+    .send({ token: "tok_visa", orderId: order.id })
+    .expect(201);
+  expect(stripe.charges.create).toBeCalled();
+  const chargeOptions = (stripe.charges.create as jest.Mock).mock.calls[0][0];
+  expect(chargeOptions.source).toEqual("tok_visa");
+  expect(chargeOptions.amount).toEqual(order.price * 100);
+  expect(chargeOptions.currency).toEqual("inr");
 });
