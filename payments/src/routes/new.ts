@@ -32,9 +32,10 @@ router.post(
     }
 
     await stripe.charges.create({
-      currency: "usd",
+      currency: "inr",
       amount: order.price * 100,
       source: token,
+      description: `Payment of Rs. ${order.price} for your oderId #${order.id}`,
     });
 
     res.send({ success: true });
