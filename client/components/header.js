@@ -11,6 +11,14 @@ export default function Header({ currentUser }) {
       href: "/auth/signin",
     },
     currentUser && {
+      label: "Sell Tickets",
+      href: "/tickets/new",
+    },
+    currentUser && {
+      label: "My Orders",
+      href: "/orders",
+    },
+    currentUser && {
       label: "Sign out",
       href: "/auth/signout",
     },
